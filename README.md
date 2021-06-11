@@ -47,19 +47,6 @@ The network can be trained using the `train.py` script. Currently, two dataloade
 python train.py --dataset coco --coco_path trainval --depth 50
 ```
 
-
-## Pre-trained model
-
-A pre-trained model is available at: 
-- https://drive.google.com/open?id=1yLmjq3JtXi841yXWBxst0coAgR26MNBS (this is a pytorch state dict)
-
-The state dict model can be loaded using:
-
-```
-retinanet = model.resnet50(num_classes=dataset_train.num_classes(),)
-retinanet.load_state_dict(torch.load(PATH_TO_WEIGHTS))
-```
-
 ## Validation
 
 Run `coco_validation.py` to validate the code on the COCO dataset. With the above model, run:
