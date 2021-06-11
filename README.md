@@ -94,14 +94,6 @@ add an annotation where `x1`, `y1`, `x2`, `y2` and `class_name` are all empty:
 path/to/image.jpg,,,,,
 ```
 
-A full example:
-```
-/data/imgs/img_001.jpg,837,346,981,456,person
-/data/imgs/img_002.jpg,215,312,279,391,car
-/data/imgs/img_002.jpg,22,5,89,84,car
-/data/imgs/img_003.jpg,,,,,
-```
-
 ### Class mapping format
 The class name to ID mapping file should contain one mapping per line.
 Each line should use the following format:
@@ -125,9 +117,7 @@ car,1
 
 ## Examples
 
-![img1](https://github.com/yhenon/pytorch-retinanet/blob/master/images/1.jpg)
-![img2](https://github.com/yhenon/pytorch-retinanet/blob/master/images/2.jpg)
-![img4](https://github.com/yhenon/pytorch-retinanet/blob/master/images/4.jpg)
-![img6](https://github.com/yhenon/pytorch-retinanet/blob/master/images/6.jpg)
-![img7](https://github.com/yhenon/pytorch-retinanet/blob/master/images/7.jpg)
-![img8](https://github.com/yhenon/pytorch-retinanet/blob/master/images/8.jpg)
+![image_000000208](https://github.com/nishanthballal-9/object-detection-retinanet/blob/main/images/image_000000208.jpg)
+![image_000000278](https://github.com/nishanthballal-9/object-detection-retinanet/blob/main/images/image_000000278.jpg)
+![image_000001293](https://github.com/nishanthballal-9/object-detection-retinanet/blob/main/images/image_000001293.jpg)
+
