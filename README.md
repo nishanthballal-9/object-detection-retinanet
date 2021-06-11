@@ -1,4 +1,4 @@
-# pytorch-retinanet
+# Object Detection RetinaNet (Person, Car)
 
 ![image_000000086](https://github.com/nishanthballal-9/object-detection-retinanet/blob/main/images/image_000000086.jpg)
 ![image_000000183](https://github.com/nishanthballal-9/object-detection-retinanet/blob/main/images/image_000000183.jpg)
@@ -46,6 +46,12 @@ The network can be trained using the `train.py` script. Currently, two dataloade
 ```
 python train.py --dataset coco --coco_path trainval --depth 50
 ```
+
+Performed training for depth 50 (100 epochs) and depth 101 (50 epochs).
+
+Link for trained model:
+1. ResNet50 backbone - https://drive.google.com/file/d/1Th5NakykxoiSnEDhNYYsUmH1oU0wBeyl/view?usp=sharing
+2. ResNet101 backbone - https://drive.google.com/file/d/1xHFV5QITGLsKfxHhaHNzxnozwhLfOzgp/view?usp=sharing
 
 ## Validation
 
