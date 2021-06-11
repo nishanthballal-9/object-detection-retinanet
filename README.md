@@ -1,14 +1,14 @@
 # pytorch-retinanet
 
-![img3](https://github.com/yhenon/pytorch-retinanet/blob/master/images/3.jpg)
-![img5](https://github.com/yhenon/pytorch-retinanet/blob/master/images/5.jpg)
+![image_000000086](https://github.com/nishanthballal-9/object-detection-retinanet/blob/main/images/image_000000086.jpg)
+![image_000000183](https://github.com/nishanthballal-9/object-detection-retinanet/blob/main/images/image_000000183.jpg)
 
 Pytorch  implementation of RetinaNet object detection as described in [Focal Loss for Dense Object Detection](https://arxiv.org/abs/1708.02002) by Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He and Piotr Dollár.
 
 This implementation is primarily designed to be easy to read and simple to modify.
 
 ## Results
-Currently, this repo achieves 33.5% mAP at 600px resolution with a Resnet-50 backbone. The published result is 34.0% mAP. The difference is likely due to the use of Adam optimizer instead of SGD with weight decay.
+Currently, this repo achieves 28.0% mAP at 600px resolution with a Resnet-101 backbone.
 
 ## Installation
 
@@ -30,21 +30,23 @@ pip install requests
 
 ```
 
+## Train Test Split
+
+Train test split is achieved using cocosplit.py. The files train.json and val.json can be found in trainval/annotations.
+
+Replace images in trainval by the images folder obtained from:
+-https://evp-ml-data.s3.us-east-2.amazonaws.com/ml-interview/openimages-personcar/trainval.tar.gz
+
+Create train and test folders by running trainval/data_split.py
+
 ## Training
 
 The network can be trained using the `train.py` script. Currently, two dataloaders are available: COCO and CSV. For training on coco, use
 
 ```
-python train.py --dataset coco --coco_path ../coco --depth 50
+python train.py --dataset coco --coco_path trainval --depth 50
 ```
 
-For training using a custom dataset, with annotations in CSV format (see below), use
-
-```
-python train.py --dataset csv --csv_train <path/to/train_annots.csv>  --csv_classes <path/to/train/class_list.csv>  --csv_val <path/to/val_annots.csv>
-```
-
-Note that the --csv_val argument is optional, in which case no validation will be performed.
 
 ## Pre-trained model
 
@@ -62,54 +64,28 @@ retinanet.load_state_dict(torch.load(PATH_TO_WEIGHTS))
 
 Run `coco_validation.py` to validate the code on the COCO dataset. With the above model, run:
 
-`python coco_validation.py --coco_path ~/path/to/coco --model_path /path/to/model/coco_resnet_50_map_0_335_state_dict.pt`
+`python coco_validation.py --coco_path ~/path/to/coco --model_path /path/to/model/model_depth101.pt`
 
 This produces the following results:
 
 ```
- Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.335
- Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.499
- Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.357
- Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.167
- Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.369
- Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.466
- Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.282
- Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.429
- Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.458
- Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.255
- Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.508
- Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.597
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.280
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.593
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.229
+
 ```
 
 ## Visualization
 
-To visualize the network detection, use `visualize.py`:
+To visualize the network detection, use `visualize_single_image.py`:
 
 ```
-python visualize.py --dataset coco --coco_path ../coco --model <path/to/model.pt>
-```
-This will visualize bounding boxes on the validation set. To visualise with a CSV dataset, use:
-
-```
-python visualize.py --dataset csv --csv_classes <path/to/train/class_list.csv>  --csv_val <path/to/val_annots.csv> --model <path/to/model.pt>
+python visualize_single_image.py --image_dir <path/to/val/images> --model <path/to/model_depth101.pt> --class_list class_mapping.csv
 ```
 
 ## Model
 
 The retinanet model uses a resnet backbone. You can set the depth of the resnet model using the --depth argument. Depth must be one of 18, 34, 50, 101 or 152. Note that deeper models are more accurate but are slower and use more memory.
-
-## CSV datasets
-The `CSVGenerator` provides an easy way to define your own datasets.
-It uses two CSV files: one file containing annotations and one file containing a class name to ID mapping.
-
-### Annotations format
-The CSV file with annotations should contain one annotation per line.
-Images with multiple bounding boxes should use one row per bounding box.
-Note that indexing for pixel values starts at 0.
-The expected format of each line is:
-```
-path/to/image.jpg,x1,y1,x2,y2,class_name
-```
 
 Some images may not contain any labeled objects.
 To add these images to the dataset as negative examples,
@@ -120,17 +96,11 @@ path/to/image.jpg,,,,,
 
 A full example:
 ```
-/data/imgs/img_001.jpg,837,346,981,456,cow
-/data/imgs/img_002.jpg,215,312,279,391,cat
-/data/imgs/img_002.jpg,22,5,89,84,bird
+/data/imgs/img_001.jpg,837,346,981,456,person
+/data/imgs/img_002.jpg,215,312,279,391,car
+/data/imgs/img_002.jpg,22,5,89,84,car
 /data/imgs/img_003.jpg,,,,,
 ```
-
-This defines a dataset with 3 images.
-`img_001.jpg` contains a cow.
-`img_002.jpg` contains a cat and a bird.
-`img_003.jpg` contains no interesting objects/animals.
-
 
 ### Class mapping format
 The class name to ID mapping file should contain one mapping per line.
@@ -144,9 +114,8 @@ Do not include a background class as it is implicit.
 
 For example:
 ```
-cow,0
-cat,1
-bird,2
+person,0
+car,1
 ```
 
 ## Acknowledgements
